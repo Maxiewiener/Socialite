@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Example JS App!</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+   <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+   <script src="http://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+   <style>
+       div {
+           margin: 10px;
+       }
+   </style>
+</head>
+<body>
+<div data-role="page">
+
+
+   <div data-role="header">
+       <h1>Welcome To My Homepage</h1>
+   </div>
+`   1
+   <div data-role="main" class="ui-content">
+       <div>
+           <!-- DO NOT put the inputs and buttons inside a form element. Your code for Parse will not work! -->
+           <label for="username">Username: </label>
+           <input id="username" type="text">
+
+
+           <label for="password">Password: </label>
+           <input id="password" type="password">
+
+
+           <label for="eyeColor">Eye Color: </label>
+           <input id="eyeColor" type="text">
+       </div>
+       <div>
+           <button id="loginButton">Log In</button>
+           <button id="createAccntButton">Create Account</button>
+           <button id="updateAccntButton">Update User Account</button>
+           <button id="displayInfoButton">Display Info About User</button>
+           <button id="logoutButton">Logout</button>
+       </div>
+   </div>
+
+
+   <div data-role="footer">
+       <p id="output">Footer Text</p>
+   </div>
+
+
+</div>
+
+
+
+
+<script>
+   //This line identifies you and to what application on Parse the data will be transmitted to and from, PUT YOUR OWN KEYS HERE
+   Parse.initialize("Vag1OMAUUOrVrQsszG1vj4W19hLPPqUnCGwENgUo", "dMtOmghcVsZuCiDfuK0xeSbKsofwFkLkF5tDOIHd");
+
+
+
+
+   //Code for logging in an existing user
+   $("#loginButton").on("click", function (e) {
+       console.log("logging in");
+
+
+       var usernameTxtBox = $("#username");
+       var passwordTxtBox = $("#password");
+
+
+       Parse.User.logIn(usernameTxtBox.val(), passwordTxtBox.val(), {
+           success: function (user) {
+               // Hooray! Do stuff after successful login.
+               alert("User " + user.getUsername() + " is logged in!");
+           },
+           error: function (user, error) {
+               // The login failed. Check error to see why.
+               alert("Error: " + error.code + " " + error.message);
+           }
+       });
+   });
+
+
+
+
+   //Code for signing up a user
+   $("#createAccntButton").on("click", function (e) {
+       console.log("signing up user");
+
+
+       var usernameTxtBox = $("#username");
+       var passwordTxtBox = $("#password");
+       var eyeColorTxtBox = $("#eyeColor");
+
+
+       var user = new Parse.User();
+       user.set("username", usernameTxtBox.val());
+       user.set("password", passwordTxtBox.val());
+       user.set("eyeColor", eyeColorTxtBox.val());
+
+
+       user.signUp(null, {
+           success: function (user) {
+               // Hooray!
+               alert("User " + user.getUsername() + " is created and logged in!");
+           },
+           error: function (user, error) {
+               // Show the error message somewhere and let the user try again.
+               alert("Error: " + error.code + " " + error.message);
+           }
+       });
+   });
+
+
+
+
+   //Code for updating a user's info
+   $("#updateAccntButton").on("click", function (e) {
+       console.log("updating user");
+
+
+       var usernameTxtBox = $("#username");
+       var passwordTxtBox = $("#password");
+       var eyeColorTxtBox = $("#eyeColor");
+
+
+       var user = Parse.User.current();//since the user is already created, just get the current user
+       user.set("username", usernameTxtBox.val());
+       user.set("password", passwordTxtBox.val());
+       user.set("eyeColor", eyeColorTxtBox.val());
+
+
+       //Notice we use the "save()" function, NOT the "signup()" function
+       user.save(null, {
+           success: function (user) {
+               // Hooray!
+               alert("User " + user.getUsername() + " has been updated!");
+           },
+           error: function (user, error) {
+               // Show the error message somewhere and let the user try again.
+               alert("Error: " + error.code + " " + error.message);
+           }
+       });
+   });
+
+
+   //Code for displaying a user's info
+   $("#displayInfoButton").on("click", function (e) {
+       console.log("displaying user's info");
+
+
+       var user = Parse.User.current();//since the user is already created and logged in, just get the current user
+       var outputText  = "username: " + user.get("username") + "/ password: " + user.get("password") + "eyeColor: " + user.get("eyeColor");
+       $("#output").text(outputText);
+       console.log("username: " + user.get("username"));
+       console.log("password: " + user.get("password"));
+       console.log("eyeColor: " + user.get("eyeColor"));
+   });
+
+
+   //Code for logging out a user
+   $("#logoutButton").on("click", function (e) {
+       console.log("logging out user");
+
+
+       Parse.User.logOut();
+
+
+   });
+
+
+
+
+</script>
+</body>
+</html>

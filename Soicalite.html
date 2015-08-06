@@ -1,0 +1,13 @@
+<html>
+<head>
+<script src="//www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+Parse.initialize("lDOl0lJvG5uAZJI5witL7TqMU74oNRooaHSbEQIJ", "9NE8xRrZ6tODCrR6rEgGYiUwWjYZkO1PSUBh2hr9");
+<head>
+<body>
+var TestObject = Parse.Object.extend("TestObject");
+var testObject = new TestObject();
+testObject.save({foo: "bar"}).then(function(object) {
+  alert("yay! it worked");
+});
+<body>
+<html>
